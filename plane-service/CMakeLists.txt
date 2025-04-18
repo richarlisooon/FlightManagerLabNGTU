@@ -34,5 +34,15 @@ add_executable(main src/main.cpp
         src/cpp/repos/FlightRepository.cpp
         src/cpp/repos/IdentityRepository.cpp
         src/cpp/repos/PlaneRepository.cpp
-        src/cpp/repos/TimeRepository.cpp)
+        src/cpp/repos/TimeRepository.cpp
+        src/header/services/AirportService.h
+        src/header/services/DispatcherService.h
+        src/header/services/PlaneService.h
+        src/header/services/FlightService.h
+        src/header/services/TimeService.h
+        src/cpp/services/AirportService.cpp
+        src/cpp/services/DispatcherService.cpp
+        src/cpp/services/PlaneService.cpp
+        src/cpp/services/FlightService.cpp
+        src/cpp/services/TimeService.cpp)
 
