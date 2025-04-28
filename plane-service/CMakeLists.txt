@@ -44,5 +44,18 @@ add_executable(main src/main.cpp
         src/cpp/services/DispatcherService.cpp
         src/cpp/services/PlaneService.cpp
         src/cpp/services/FlightService.cpp
-        src/cpp/services/TimeService.cpp)
+        src/cpp/services/TimeService.cpp
+        src/header/controllers/AirportController.h
+        src/header/controllers/Config.h
+        src/header/controllers/DispatcherController.h
+        src/header/controllers/FlightController.h
+        src/header/controllers/IController.h
+        src/header/controllers/PlaneController.h
+        src/header/controllers/TimeController.h
+        src/cpp/controllers/AirportController.cpp
+        src/cpp/controllers/DispatcherController.cpp
+        src/cpp/controllers/FlightController.cpp
+        src/cpp/controllers/PlaneController.cpp
+        src/cpp/controllers/TimeController.cpp
+        src/Config.h)
 
