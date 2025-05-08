@@ -10,7 +10,6 @@ execute_process(
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/libs)
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/libs)
-
 add_executable(main src/main.cpp
         src/header/repos/AirportRepository.h
         src/header/repos/DispatcherRepository.h
