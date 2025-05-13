@@ -33,16 +33,16 @@ services:
     ports:
       - 8082:8082
 
-  plane-service:
-    image: plane-service
-    build: plane-service
-    container_name: plane-service
-    env_file:
-      - .env
-    ports:
-      - 8083:8083
-    volumes:
-      - data:/var/lib/plane-service/data
+#  plane-service:
+#    image: plane-service
+#    build: plane-service
+#    container_name: plane-service
+#    env_file:
+#      - .env
+#    ports:
+#      - 8083:8083
+#    volumes:
+#      - data:/var/lib/plane-service/data
 
   gateway:
     image: gateway
