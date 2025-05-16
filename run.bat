@@ -1,4 +1,4 @@
-.\run@echo off
+@echo off
 
 if "%1" EQU "-d" goto docker
 if "%1" EQU "-dl" goto docker-less
