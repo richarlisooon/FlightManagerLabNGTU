@@ -20,7 +20,9 @@ function build_docker_less {
 
 function build_docker {
     echo "[script] building $service_name image ..."
-    sudo docker rmi -f $(sudo docker images -q "$service_name")
+    if sudo docker images -q "$service_name" | grep -q .; then
+        sudo docker rmi -f "$service_name"
+    fi
     sudo docker build . -t "$service_name"
     echo "[script] building $service_name image finished"
 }
