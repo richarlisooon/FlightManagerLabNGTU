@@ -19,6 +19,7 @@ void FlightController::configure(Server* server)
             auto header = req.get_header_value("Authorization");
             string service_token = req.get_header_value("Service-Token");
             if (service_token != SERVICE_TOKEN_VALUE) {
+                log.warn("get flights failed: forbidden access [code 403]");
                 throw 403;
             }
             list<FlightModel> flights = serv.getAllFlights(header);
@@ -36,15 +37,19 @@ void FlightController::configure(Server* server)
             }
             res.status = 200;
             res.set_content(flights_json.dump(), "application/json");
+            log.info("get flights successful: (" + to_string(flights_json.size()) + " entities) [code 200]");
         } catch (int& e)
         {
+            log.warn("get flights failed: [code " + to_string(e) + "]");
             res.status = e;
         } catch (const exception& e)
         {
             string str(e.what());
+            log.warn("get flights failed: " + str + " [code 500]");
             res.status = 500;
         } catch (...)
         {
+            log.error("unknown error occured");
             res.status = 500;
         }
     });
@@ -55,6 +60,7 @@ void FlightController::configure(Server* server)
             auto header = req.get_header_value("Authorization");
             string service_token = req.get_header_value("Service-Token");
             if (service_token != SERVICE_TOKEN_VALUE) {
+                log.warn("create flight failed: forbidden access [code 403]");
                 throw 403;
             }
             json request;
@@ -63,6 +69,7 @@ void FlightController::configure(Server* server)
                 request = json::parse(req.body);
             } catch (...)
             {
+                log.warn("create flight failed: invalid data [code 400]");
                 throw 400;
             }
             long int dispatcherId, planeId, airportId;
@@ -73,6 +80,7 @@ void FlightController::configure(Server* server)
                 airportId = request["airportId"];
             } catch (...)
             {
+                log.warn("create flight failed: invalid data [code 400]");
                 throw 400;
             }
             FlightModel flight(0, 0, 0, dispatcherId, planeId, airportId);
@@ -86,15 +94,19 @@ void FlightController::configure(Server* server)
             flight_json["airportId"] = created.getAirportId();
             res.status = 200;
             res.set_content(flight_json.dump(), "application/json");
+            log.info("create flight successful: id=" + to_string(flight_json["id"]) + " [code[200]");
         } catch (int& e)
         {
+            log.warn("get flights failed: [code " + to_string(e) + "]");
             res.status = e;
         } catch (const exception& e)
         {
             string str(e.what());
+            log.warn("create flight failed: " + str + " [code 500]");
             res.status = 500;
         } catch (...)
         {
+            log.error("unknown error occured");
             res.status = 500;
         }
     });
