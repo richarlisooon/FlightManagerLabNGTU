@@ -1,0 +1,2 @@
+C:/Users/Asus/CLionProjects/FlightManagerLabNGTU/client/src/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/Asus/CLionProjects/FlightManagerLabNGTU/client/src/cmake-build-debug/CMakeFiles/rebuild_cache.dir

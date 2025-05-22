@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GaySky Airlines - Welcome page</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✈</text></svg>">
+    <link rel="stylesheet" href="../css/StartPage.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+<div class="sky-background">
+    <div class="cloud cloud1">
+        <div class="cloud-part part1"></div>
+        <div class="cloud-part part2"></div>
+        <div class="cloud-part part3"></div>
+    </div>
+    <div class="cloud cloud2">
+        <div class="cloud-part part1"></div>
+        <div class="cloud-part part2"></div>
+        <div class="cloud-part part3"></div>
+    </div>
+    <div class="cloud cloud3">
+        <div class="cloud-part part1"></div>
+        <div class="cloud-part part2"></div>
+        <div class="cloud-part part3"></div>
+    </div>
+    <div class="cloud cloud4">
+        <div class="cloud-part part1"></div>
+        <div class="cloud-part part2"></div>
+        <div class="cloud-part part3"></div>
+    </div>
+    <svg xmlns="http://www.w3.org/2000/svg" class="svg-filters">
+        <defs>
+            <filter id="cloud-filter">
+                <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="3" />
+                <feDisplacementMap in="SourceGraphic" scale="10" />
+                <feGaussianBlur stdDeviation="5" />
+            </filter>
+        </defs>
+    </svg>
+</div>
+
+<div class="welcome-container" id="mainContent">
+    <div class="logo">
+        <i class="fas fa-plane-departure"></i>
+        <h1>GaySky Airlines</h1>
+    </div>
+
+    <h2>Hello dispatcher, you're on best mission control website</h2>
+    <p class="welcome-text">Let's start! Now log in or register</p>
+
+    <div class="auth-buttons">
+        <button class="btn btn-login" onclick="showLoginForm()">
+            <i class="fas fa-sign-in-alt"></i> Log in
+        </button>
+        <button class="btn btn-register" onclick="showRegisterForm()">
+            <i class="fas fa-user-plus"></i> Register
+        </button>
+    </div>
+
+    <div class="plane-animation">
+        <i class="fas fa-plane"></i>
+    </div>
+</div>
+
+<div class="auth-container" id="loginForm" style="display: none;">
+    <div class="auth-form">
+        <div class="auth-header">
+            <h2>Log in</h2>
+            <button class="btn-back" onclick="showMainContent()">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+        </div>
+        <form id="loginFormElement">
+            <div class="form-group">
+                <label for="loginEmail">Email</label>
+                <input type="email" id="loginEmail" required>
+            </div>
+            <div class="form-group">
+                <label for="loginPassword">Password</label>
+                <input type="password" id="loginPassword" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Log in</button>
+        </form>
+        <div class="auth-footer">
+            Don't have account yet? <a href="#" onclick="showRegisterForm()">Register</a>
+        </div>
+    </div>
+</div>
+
+<div class="auth-container" id="registerForm" style="display: none;">
+    <div class="auth-form">
+        <div class="auth-header">
+            <h2>Registration</h2>
+            <button class="btn-back" onclick="showMainContent()">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+        </div>
+        <form id="registerFormElement">
+            <div class="form-group">
+                <label for="regEmail">Email</label>
+                <input type="email" id="regEmail" required>
+            </div>
+            <div class="form-group">
+                <label for="regFirstName"> Name </label>
+                <input type="text" id="regFirstName" required>
+            </div>
+            <div class="form-group">
+                <label for="regLastName">Surname</label>
+                <input type="text" id="regLastName" required>
+            </div>
+            <div class="form-group">
+                <label for="regPassword">Password</label>
+                <input type="password" id="regPassword" required>
+            </div>
+            <div class="form-group">
+                <label for="regConfirmPassword">Confirm password</label>
+                <input type="password" id="regConfirmPassword" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Register</button>
+        </form>
+        <div class="auth-footer">
+            Already have account? <a href="#" onclick="showLoginForm()">Log in</a>
+        </div>
+    </div>
+</div>
+
+<script src="../js/StartPage.js"></script>
+</body>
+</html>

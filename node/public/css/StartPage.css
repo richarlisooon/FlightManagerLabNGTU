@@ -1,0 +1,428 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+}
+
+body {
+    overflow: hidden;
+    height: 100vh;
+    color: #fff;
+}
+
+.sky-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    z-index: -1;
+    overflow: hidden;
+}
+
+.svg-filters {
+    position: absolute;
+    width: 0;
+    height: 0;
+}
+
+.cloud {
+    position: absolute;
+    filter: url(#cloud-filter);
+    animation: cloudMove linear infinite;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    animation-fill-mode: forwards;
+}
+
+.cloud-part {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    position: absolute;
+    filter: blur(8px);
+}
+
+.cloud1 {
+    width: 300px;
+    height: 150px;
+    top: 15%;
+    left: -300px;
+    animation-duration: 25s;
+    animation-delay: 0.5s;
+}
+
+.cloud1 .part1 {
+    width: 100px;
+    height: 80px;
+    top: 20px;
+    left: 30px;
+}
+
+.cloud1 .part2 {
+    width: 120px;
+    height: 100px;
+    top: 40px;
+    left: 100px;
+}
+
+.cloud1 .part3 {
+    width: 80px;
+    height: 70px;
+    top: 60px;
+    left: 180px;
+}
+
+.cloud2 {
+    width: 400px;
+    height: 180px;
+    top: 35%;
+    left: -400px;
+    animation-duration: 20s;
+    animation-delay: 1s;
+}
+
+.cloud2 .part1 {
+    width: 150px;
+    height: 100px;
+    top: 30px;
+    left: 50px;
+}
+
+.cloud2 .part2 {
+    width: 180px;
+    height: 120px;
+    top: 50px;
+    left: 150px;
+}
+
+.cloud2 .part3 {
+    width: 100px;
+    height: 80px;
+    top: 70px;
+    left: 280px;
+}
+
+cloud3 {
+    width: 250px;
+    height: 120px;
+    top: 65%;
+    left: -250px;
+    animation-duration: 15s;
+    animation-delay: 0.3s;
+}
+
+.cloud3 .part1 {
+    width: 80px;
+    height: 60px;
+    top: 20px;
+    left: 20px;
+}
+
+
+.cloud3 .part2 {
+    width: 100px;
+    height: 80px;
+    top: 40px;
+    left: 80px;
+}
+
+.cloud3 .part3 {
+    width: 70px;
+    height: 60px;
+    top: 50px;
+    left: 150px;
+}
+
+.cloud4 {
+    width: 350px;
+    height: 160px;
+    top: 50%;
+    left: -350px;
+    animation-duration: 18s;
+    animation-delay: 0.8s;
+}
+
+.cloud4 .part1 {
+    width: 120px;
+    height: 90px;
+    top: 30px;
+    left: 40px;
+}
+
+.cloud4 .part2 {
+    width: 140px;
+    height: 100px;
+    top: 50px;
+    left: 130px;
+}
+
+.cloud4 .part3 {
+    width: 90px;
+    height: 70px;
+    top: 60px;
+    left: 240px;
+}
+
+@keyframes cloudMove {
+    0% {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    20% {
+        opacity: 1;
+    }
+    80% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(100vw);
+        opacity: 0;
+    }
+}
+.cloud1 {
+    animation: cloudMove 25s linear 0.5s infinite;
+}
+.cloud2 {
+    animation: cloudMove 20s linear 1s infinite;
+}
+.cloud3 {
+    animation: cloudMove 15s linear 0.3s infinite;
+}
+.cloud4 {
+    animation: cloudMove 18s linear 0.8s infinite;
+}
+
+.cloud:hover {
+    filter: url(#cloud-filter) brightness(1.2);
+}
+
+
+.welcome-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    padding: 20px;
+    text-align: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.logo i {
+    font-size: 3rem;
+    margin-right: 15px;
+    color: #4fc3f7;
+}
+
+.logo h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+}
+
+h2 {
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.welcome-text {
+    font-size: 1.2rem;
+    margin-bottom: 40px;
+    max-width: 500px;
+}
+
+.auth-buttons {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 50px;
+}
+
+.btn {
+    padding: 12px 30px;
+    border: none;
+    border-radius: 30px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn-login {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+.btn-login:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+.btn-register {
+    background-color: #4fc3f7;
+    color: #1e3c72;
+}
+
+.btn-register:hover {
+    background-color: #3fb0e0;
+}
+
+.plane-animation {
+    font-size: 3rem;
+    color: rgba(255, 255, 255, 0.7);
+    animation: fly 8s linear infinite;
+}
+
+@keyframes fly {
+    0% {
+        transform: translateX(-100vw) translateY(0);
+    }
+    50% {
+        transform: translateX(0) translateY(-20px);
+    }
+    100% {
+        transform: translateX(100vw) translateY(0);
+    }
+}
+
+@media (max-width: 768px) {
+    .auth-buttons {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .logo {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .logo i {
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+
+    .cloud {
+        animation-duration: 20s !important;
+    }
+}
+
+.auth-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(30, 60, 114, 0.9);
+    z-index: 10;
+    animation: fadeIn 0.5s ease-out;
+}
+
+.auth-form {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 450px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    color: #1e3c72;
+}
+
+.auth-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.auth-header h2 {
+    color: #1e3c72;
+    font-size: 1.8rem;
+    margin: 0;
+}
+
+.btn-back {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    color: #1e3c72;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #1e3c72;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: border 0.3s;
+}
+
+.form-group input:focus {
+    border-color: #4fc3f7;
+    outline: none;
+}
+
+.auth-footer {
+    margin-top: 20px;
+    text-align: center;
+    color: #666;
+}
+
+.auth-footer a {
+    color: #4fc3f7;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.auth-footer a:hover {
+    text-decoration: underline;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.auth-form {
+    animation: slideIn 0.4s ease-out;
+}

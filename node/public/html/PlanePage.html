@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GaySky Airlines - Plane Management</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✈</text></svg>">
+  <link rel="stylesheet" href="../css/PlanePage.css">
+  <link rel="stylesheet" href="../css/MainPage.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+<div class="dashboard-container">
+  <header class="dashboard-header">
+    <div class="logo">
+      <i class="fas fa-plane"></i>
+      <h1>GaySky Airlines</h1>
+    </div>
+    <div class="time-control">
+      <span id="currentTime">Loading time...</span>
+      <button class="time-skip-btn" onclick="openTimeModal()">
+        <i class="fas fa-forward"></i> Skip Time
+      </button>
+    </div>
+    <div id="timeModal" class="modal">
+      <div class="modal-content">
+        <h2>Skip Time</h2>
+        <div class="form-group">
+          <label for="skipHours">Hours to skip:</label>
+          <input type="number" id="skipHours" min="1" value="1">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="action-btn close-btn" onclick="closeTimeModal()">Cancel</button>
+          <button type="button" class="action-btn submit-btn" onclick="skipTime()">Skip</button>
+        </div>
+      </div>
+    </div>
+    <div class="user-info">
+      <button class="btn-back" onclick="location.href = '/html/MainPage.html';">
+        <i class="fas fa-arrow-left"></i> Back
+      </button>
+      <span class="username">Dispatcher</span>
+      <button class="btn-logout" onclick="logout()">
+        <i class="fas fa-sign-out-alt"></i>
+      </button>
+    </div>
+  </header>
+
+  <main class="dashboard-main">
+    <div class="plane-container">
+      <div class="plane-header">
+        <h2>Plane Management</h2>
+        <button class="add-btn" onclick="openAddModal()">
+          <i class="fas fa-plus"></i> Add Plane
+        </button>
+      </div>
+
+      <table class="plane-table">
+        <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Pilot</th>
+          <th>Built Year</th>
+          <th>Speed</th>
+          <th>Min Airport Size</th>
+          <th>Broken (%)</th>
+          <th>Location (X,Y)</th>
+          <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody id="planeTableBody">
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <footer class="dashboard-footer">
+    <p>© 2023 GaySky Airlines. All rights reserved.</p>
+    <p>Version 1.0.0</p>
+  </footer>
+</div>
+
+<div id="planeModal" class="modal">
+  <div class="modal-content">
+    <h2 id="modalTitle">Add New Plane</h2>
+    <form id="planeForm">
+      <input type="hidden" id="planeId">
+      <div class="form-group">
+        <label for="planeName">Name</label>
+        <input type="text" id="planeName" required>
+      </div>
+      <div class="form-group">
+        <label for="planePilot">Pilot</label>
+        <input type="text" id="planePilot" required>
+      </div>
+      <div class="form-group">
+        <label for="planeBuiltYear">Built Year</label>
+        <input type="number" id="planeBuiltYear" required>
+      </div>
+      <div class="form-group">
+        <label for="planeSpeed">Speed (km/h)</label>
+        <input type="number" id="planeSpeed" required>
+      </div>
+      <div class="form-group">
+        <label for="planeMinSize">Min Airport Size</label>
+        <input type="number" id="planeMinSize" required>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="action-btn close-btn" onclick="closeModal()">Cancel</button>
+        <button type="submit" class="action-btn submit-btn">Save</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="../js/PlanePage.js"></script>
+<script src="../js/MainPage.js"></script>
+</body>
+</html>
