@@ -19,7 +19,7 @@ void AirportController::configure(Server* server)
             string service_token = req.get_header_value("Service-Token");
             if (service_token != SERVICE_TOKEN_VALUE) {
                 log.warn("get airports failed: forbidden access [code 403]");
-                throw 403;
+                throw string("403 Forbidden access");
             }
             list<AirportModel> airports = serv.getAllAirports(header);
             json airports_json = json::array();
@@ -35,19 +35,22 @@ void AirportController::configure(Server* server)
             res.status = 200;
             res.set_content(airports_json.dump(), "application/json");
             log.info("get airports successful (" + to_string(airports_json.size()) + " entities) [code 200]");
-        } catch (int& e)
+        } catch (string& e)
         {
-            log.warn("get airports failed: [code " + to_string(e) + "]");
-            res.status = e;
+            log.warn(e);
+            res.status = stoi(e);
+            res.set_content(e, "text/plain");
         } catch (const exception& e)
         {
             string str(e.what());
             log.warn("get airports failed: " + str + " [code 500]");
             res.status = 500;
+            res.set_content(e.what(), "text/plain");
         } catch (...)
         {
             log.error("unknown error occured");
             res.status = 500;
+            res.set_content("unknown error occured", "text/plain");
         }
     });
 
@@ -59,7 +62,7 @@ void AirportController::configure(Server* server)
             string service_token = req.get_header_value("Service-Token");
             if (service_token != SERVICE_TOKEN_VALUE) {
                 log.warn("create airport failed: forbidden access [code 403]");
-                throw 403;
+                throw string("403 Forbidden access");
             }
             json request;
             try
@@ -68,7 +71,7 @@ void AirportController::configure(Server* server)
             } catch (...)
             {
                 log.warn("create airport failed: invalid data [code 400]");
-                throw 400;
+                throw string("400 Bad request");
             }
             string name;
             int size;
@@ -82,7 +85,7 @@ void AirportController::configure(Server* server)
             } catch (...)
             {
                 log.warn("create airport failed: invalid data [code 400]");
-                throw 400;
+                throw string("400 Invalid data");
             }
             AirportModel created = serv.createAirport(AirportModel(0, name, size, x, y), header);
             json airport_json;
@@ -94,19 +97,22 @@ void AirportController::configure(Server* server)
             res.status = 201;
             res.set_content(airport_json.dump(), "application/json");
             log.info("create airport successful: id=" + to_string(airport_json["id"]) + " [code 200]");
-        }  catch (int& e)
+        }  catch (string& e)
         {
-            log.warn("create airport failed: [code " + to_string(e) + "]");
-            res.status = e;
-        } catch (const exception& e)
+            log.warn(e);
+            res.status = stoi(e);
+            res.set_content(e, "text/plain");
+        }catch (const exception& e)
         {
             string str(e.what());
             log.warn("create airport failed: " + str + " [code 500]");
             res.status = 500;
+            res.set_content(e.what(), "text/plain");
         } catch (...)
         {
             log.error("unknown error occured");
             res.status = 500;
+            res.set_content("unknown error occured", "text/plain");
         }
     });
 
@@ -122,12 +128,12 @@ void AirportController::configure(Server* server)
             } catch (...)
             {
                 log.warn("update failed: invalid parameter 'update' [code 400]");
-                throw 400;
+                throw string("400 Invalid update fields");
             }
             string service_token = req.get_header_value("Service-Token");
             if (service_token != SERVICE_TOKEN_VALUE) {
                 log.warn("update airport failed: forbidden access [code 403]");
-                throw 403;
+                throw string("403 Forbidden access");
             }
             stringstream ss(fields);
             string item;
@@ -146,19 +152,19 @@ void AirportController::configure(Server* server)
             } catch (...)
             {
                 log.warn("update airport failed: invalid data [code 400]");
-                throw 400;
+                throw string("400 Bad request");
             }
             for (auto update : updates)
             {
                 if (request[update].is_null())
                 {
                     log.warn("update airport failed: fields to update not provided [code 400]");
-                    throw 400;
+                    throw string("400 Fields to update not provided");
                 }
                 if (request["id"].is_null())
                 {
                     log.warn("update airport failed: id not provided [code 400]");
-                    throw 400;
+                    throw string("400 Id not provided");
                 }
 
             }
@@ -174,7 +180,7 @@ void AirportController::configure(Server* server)
             } catch (...)
             {
                 log.warn("update airport failed: invalid data [code 400]");
-                throw 400;
+                throw string("400 Invalid data");
             }
             AirportModel airport(request["id"], name, size, x, y);
             AirportModel updated = serv.updateAirport(airport, updates, header);
@@ -188,19 +194,22 @@ void AirportController::configure(Server* server)
             res.status = 201;
             res.set_content(airport_json.dump(), "application/json");
             log.info("update airport successful: id=" + to_string(airport_json["id"]) + " [code 200]");
-        } catch (int& e)
+        } catch (string& e)
         {
-            log.warn("update airport failed: [code " + to_string(e) + "]");
-            res.status = e;
+            log.warn(e);
+            res.status = stoi(e);
+            res.set_content(e, "text/plain");
         } catch (const exception& e)
         {
             string str(e.what());
             log.warn("update airport failed: " + str + " [code 500]");
             res.status = 500;
+            res.set_content(e.what(), "text/plain");
         } catch (...)
         {
             log.error("unknown error occured");
             res.status = 500;
+            res.set_content("unknown error occured", "text/plain");
         }
     });
 
@@ -212,7 +221,7 @@ void AirportController::configure(Server* server)
         string service_token = req.get_header_value("Service-Token");
         if (service_token != SERVICE_TOKEN_VALUE) {
             log.warn("update airport failed: forbidden access [code 403]");
-            throw 403;
+            throw string("403 Forbidden access");
         }
         long int id;
         try
@@ -221,24 +230,27 @@ void AirportController::configure(Server* server)
         } catch (...)
         {
             log.warn("update airport failed: invalid data [code 400]");
-            throw 400;
+            throw string("400 Invalid parameter id");
         }
         serv.deleteAirport(id, header);
         res.status = 200;
         log.info("airport delete successful: id=" + to_string(id) + " [code 200]");
-    }  catch (int& e)
+    }  catch (string& e)
     {
-        log.warn("get airport failed: [code " + to_string(e) + "]");
-        res.status = e;
+        log.warn(e);
+        res.status = stoi(e);
+        res.set_content(e, "text/plain");
     } catch (const exception& e)
     {
         string str(e.what());
         log.warn("get airport failed: " + str + " [code 500]");
         res.status = 500;
+        res.set_content(e.what(), "text/plain");
     } catch (...)
     {
         log.error("unknown error occured");
         res.status = 500;
+        res.set_content("unknown error occured", "text/plain");
     }
 });
 }

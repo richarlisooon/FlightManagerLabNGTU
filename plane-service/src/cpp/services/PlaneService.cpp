@@ -14,7 +14,7 @@ list<PlaneModelResponse> PlaneService::getAllPlanes(string token)
     set<string> permissions;
     permissions.insert("plane-get");
     if (!ident.authorize(permissions, token))
-         throw 401;
+         throw string("401 User is unauthorized");
     list<PlaneModel> planes = repo.getPlanes();
     list<PlaneModelResponse> planesResponse;
     for (auto plane : planes)
@@ -81,7 +81,7 @@ list<PlaneModelResponse> PlaneService::getAllPlanes(string token)
             //If plane didn't fly yet, we take coordinates of airport, that first in list of airports.
             list<AirportModel> airports = air.getAirports();
             if (airports.empty())
-                throw 409;
+                throw string("409 Airports are not exist");
             planeResponse.setX(airports.front().getX());
             planeResponse.setY(airports.front().getY());
         }
@@ -95,9 +95,12 @@ PlaneModel PlaneService::createPlane(PlaneModel plane, string token)
     set<string> permissions;
     permissions.insert("plane-create");
     if (!ident.authorize(permissions, token))
-         throw 401;
+         throw string("401 User is unauthorized");
     if (plane.getSpeed() == 0)
-         throw 400;
+         throw string("400 Plane can't have zero speed");
+    list<AirportModel> airports = air.getAirports();
+    if (airports.empty())
+        throw string("409 No airports to create plane");
     PlaneModel res = repo.createPlane(plane);
     return res;
 }
@@ -106,11 +109,13 @@ bool PlaneService::deletePlane(long int id, string token)
     set<string> permissions;
     permissions.insert("plane-delete");
     if (!ident.authorize(permissions, token))
-         throw 401;
+         throw string("401 User is unauthorized");
     list<FlightModel> flights = flight.getFlights(nullptr, nullptr, nullptr, nullptr, &id);
-    flights.sort(PlaneSortByTime);
-    if (flights.front().getTimestampEnd() > static_cast<long int>(time(nullptr)) + timer.getAddedTime())
-        throw 409;
+    if (!flights.empty()){
+        flights.sort(PlaneSortByTime);
+        if (flights.front().getTimestampEnd() > static_cast<long int>(time(nullptr)) + timer.getAddedTime())
+            throw string("409 This plane participate in flight");
+    }
     bool res = repo.deletePlane(id);
     return res;
 }
@@ -119,14 +124,16 @@ PlaneModel PlaneService::updatePlane(PlaneModel plane, set<string> update, strin
     set<string> permissions;
     permissions.insert("plane-update");
     if (!ident.authorize(permissions, token))
-         throw 401;
+         throw string("401 User is unauthorized");
     long int planeId = plane.getId();
     list<FlightModel> flights = flight.getFlights(nullptr, nullptr, nullptr, nullptr, &planeId);
-    flights.sort(PlaneSortByTime);
-    if (flights.front().getTimestampEnd() > static_cast<long int>(time(nullptr)) + timer.getAddedTime())
-        throw 409;
+    if (!flights.empty()){
+        flights.sort(PlaneSortByTime);
+        if (flights.front().getTimestampEnd() > static_cast<long int>(time(nullptr)) + timer.getAddedTime())
+            throw string("409 Plane participate in flight");
+    }
     if (update.count("brokenPercentage") > 0)
-        throw 400;
+        throw string("400 User can't change broken percentage");
     PlaneModel res = repo.updatePlane(plane, update);
     return res;
 }

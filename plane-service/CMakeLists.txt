@@ -56,5 +56,7 @@ add_executable(main src/main.cpp
         src/cpp/controllers/FlightController.cpp
         src/cpp/controllers/PlaneController.cpp
         src/cpp/controllers/TimeController.cpp
+        src/cpp/utils/PlaneLogger.cpp
+        src/cpp/utils/PlaneLogger.h
         src/Config.h)
 

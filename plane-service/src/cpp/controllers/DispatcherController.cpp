@@ -20,7 +20,7 @@ void DispatcherController::configure(Server* server)
             string service_token = req.get_header_value("Service-Token");
             if (service_token != SERVICE_TOKEN_VALUE) {
                 log.warn("get dispatchers failed: forbidden access [code 403]");
-                throw 403;
+                throw string("403 Forbidden access");
             }
             list<DispatcherModel> dispatchers = serv.getAllDispatchers(header);
             json dispatchers_json = json::array();
@@ -70,7 +70,7 @@ void DispatcherController::configure(Server* server)
             string service_token = req.get_header_value("Service-Token");
             if (service_token != SERVICE_TOKEN_VALUE) {
                 log.warn("update dispatcher failed: forbidden access [code 403]");
-                throw 403;
+                throw string("403 Forbidden access");
             }
             string fields;
             try
@@ -79,7 +79,7 @@ void DispatcherController::configure(Server* server)
             } catch (...)
             {
                 log.warn("update dispatcher failed: wrong parameter 'update' [code 400]");
-                throw 400;
+                throw string("400 Invalid parameter update");
             }
             stringstream ss(fields);
             string item;
@@ -98,20 +98,20 @@ void DispatcherController::configure(Server* server)
             } catch (...)
             {
                 log.warn("update dispatcher failed: invalid data [code 400]");
-                throw 400;
+                throw string("400 Bad request");
             }
             for (auto update : updates)
             {
                 if (request[update].is_null())
                 {
                     log.warn("update dispatcher failed:  fields to update not provided [code 400]");
-                    throw 400;
+                    throw string("400 Fields to update not provided");
                 }
 
                 if (request["id"].is_null())
                 {
                     log.warn("update dispatcher failed: id is not provided [code 400]");
-                    throw 400;
+                    throw string("400 Id not provided");
                 }
 
             }
@@ -139,7 +139,7 @@ void DispatcherController::configure(Server* server)
             } catch (...)
             {
                 log.warn("update dispatcher failed: invalid data [code 400]");
-                throw 400;
+                throw string("400 Invalid data");
             }
             DispatcherModel dispatcher(request["id"], firstName, lastName, email, password, isBanned, roles);
             DispatcherModel updated = serv.updateDispatcher(dispatcher, updates, header);
@@ -163,15 +163,22 @@ void DispatcherController::configure(Server* server)
             res.status = 200;
             res.set_content(dispatcher_json.dump(), "application/json");
             log.info("update dispatcher successful: id=" + to_string(dispatcher_json["id"]) + " [code 200]");
-        } catch (int& e)
+        } catch (string& e)
         {
-            log.warn("update dispatcher failed: [code " + to_string(e) + "]");
-            res.status = e;
+            log.warn(e);
+            res.status = stoi(e);
+            res.set_content(e, "text/plain");
         } catch (const exception& e)
         {
             string str(e.what());
             log.warn("update dispatcher failed: " + str + " [code 500]");
             res.status = 500;
+            res.set_content(e.what(), "text/plain");
+        } catch (...)
+        {
+            log.error("unknown error occured");
+            res.status = 500;
+            res.set_content("unknown error occured", "text/plain");
         }
     });
     server->Get(DISPATCHER_GET_BY_ID_MAPPING, [&](const Request& req, Response& res)
@@ -183,7 +190,7 @@ void DispatcherController::configure(Server* server)
             auto isPrivate = req.get_param_value("private");
             if (service_token != SERVICE_TOKEN_VALUE) {
                 log.warn("get dispatcher failed: forbidden access [code 403]");
-                throw 403;
+                throw string("403 Forbidden access");
             }
             long int id;
             try
@@ -192,7 +199,7 @@ void DispatcherController::configure(Server* server)
             } catch (...)
             {
                 log.warn("get dispatcher failed: invalid parameter [code 400]");
-                throw 400;
+                throw string("400 Invalid parameter id");
             }
             DispatcherModel dispatcher = serv.getDispatcherById(id, header, isPrivate == "true");
             json dispatcher_json;
@@ -214,19 +221,22 @@ void DispatcherController::configure(Server* server)
             res.status = 200;
             res.set_content(dispatcher_json.dump(), "application/json");
             log.info("get dispatcher successful: id=" + to_string(id) + " [code 200]");
-        }  catch (int& e)
+        }  catch (string& e)
         {
-            log.warn("get dispatcher failed: [code " + to_string(e) + "]");
-            res.status = e;
+            log.warn(e);
+            res.status = stoi(e);
+            res.set_content(e, "text/plain");
         } catch (const exception& e)
         {
             string str(e.what());
             log.warn("get dispatcher failed: " + str + " [code 500]");
             res.status = 500;
+            res.set_content(e.what(), "text/plain");
         } catch (...)
         {
             log.error("unknown error occured");
             res.status = 500;
+            res.set_content("unknown error occured", "text/plain");
         }
     });
 }

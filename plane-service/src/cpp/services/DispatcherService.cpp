@@ -16,7 +16,7 @@ list<DispatcherModel> DispatcherService::getAllDispatchers(string token)
         permissions.insert("dispatcher-get-public " + dispatchersId);
     }
     if (!ident.authorize(permissions, token))
-         throw 401;
+         throw string("401 User is unauthorized");
     return dispatchers;
 }
 
@@ -30,7 +30,7 @@ DispatcherModel DispatcherService::getDispatcherById(long int id, string token, 
 
     list<DispatcherModel> dispatchers = repo.getDispatchers(&id);
     if (!ident.authorize(permissions, token))
-         throw 401;
+         throw string("401 User is unauthorized");
     return dispatchers.front();
 }
 
@@ -42,13 +42,13 @@ DispatcherModel DispatcherService::updateDispatcher(DispatcherModel dispatcher, 
     else
         permissions.insert("dispatcher-update-public " + to_string(dispatcher.getId()));
     if (!ident.authorize(permissions, token))
-         throw 401;
+         throw string("401 User is unauthorized");
     long int dispId = ident.getIdByToken(token);
     list<DispatcherModel> dispatchers = repo.getDispatchers(&dispId);
     if (!dispatchers.front().getRoles().count(RoleModel::ADMIN))
     {
         if (update.count("isBanned") > 0 || update.count("roles") > 0)
-            throw 401;
+            throw string("401 Update fields not provided for this user");
     }
     DispatcherModel res = repo.updateDispatchers(dispatcher, update);
     return res;

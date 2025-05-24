@@ -11,7 +11,6 @@ using namespace std;
 
 void FlightController::configure(Server* server)
 {
-    // sample request handlers
     server->Get(FLIGHT_GET_ALL_MAPPING, [this](const Request& req, Response& res)
     {
         try
@@ -20,7 +19,7 @@ void FlightController::configure(Server* server)
             string service_token = req.get_header_value("Service-Token");
             if (service_token != SERVICE_TOKEN_VALUE) {
                 log.warn("get flights failed: forbidden access [code 403]");
-                throw 403;
+                throw string("403 Forbidden access");
             }
             list<FlightModel> flights = serv.getAllFlights(header);
             json flights_json = json::array();
@@ -38,19 +37,22 @@ void FlightController::configure(Server* server)
             res.status = 200;
             res.set_content(flights_json.dump(), "application/json");
             log.info("get flights successful: (" + to_string(flights_json.size()) + " entities) [code 200]");
-        } catch (int& e)
+        } catch (string& e)
         {
-            log.warn("get flights failed: [code " + to_string(e) + "]");
-            res.status = e;
+            log.warn(e);
+            res.status = stoi(e);
+            res.set_content(e, "text/plain");
         } catch (const exception& e)
         {
             string str(e.what());
             log.warn("get flights failed: " + str + " [code 500]");
             res.status = 500;
+            res.set_content(e.what(), "text/plain");
         } catch (...)
         {
             log.error("unknown error occured");
             res.status = 500;
+            res.set_content("unknown error occured", "text/plain");
         }
     });
     server->Post(FLIGHT_CREATE_MAPPING, [&](const Request& req, Response& res)
@@ -61,7 +63,7 @@ void FlightController::configure(Server* server)
             string service_token = req.get_header_value("Service-Token");
             if (service_token != SERVICE_TOKEN_VALUE) {
                 log.warn("create flight failed: forbidden access [code 403]");
-                throw 403;
+                throw string("403 Forbidden access");
             }
             json request;
             try
@@ -70,7 +72,7 @@ void FlightController::configure(Server* server)
             } catch (...)
             {
                 log.warn("create flight failed: invalid data [code 400]");
-                throw 400;
+                throw string("400 Bad request");
             }
             long int dispatcherId, planeId, airportId;
             try
@@ -81,7 +83,7 @@ void FlightController::configure(Server* server)
             } catch (...)
             {
                 log.warn("create flight failed: invalid data [code 400]");
-                throw 400;
+                throw string("400 Invalid data");
             }
             FlightModel flight(0, 0, 0, dispatcherId, planeId, airportId);
             FlightModel created = serv.createFlight(flight, header);
@@ -95,19 +97,22 @@ void FlightController::configure(Server* server)
             res.status = 200;
             res.set_content(flight_json.dump(), "application/json");
             log.info("create flight successful: id=" + to_string(flight_json["id"]) + " [code[200]");
-        } catch (int& e)
+        } catch (string& e)
         {
-            log.warn("get flights failed: [code " + to_string(e) + "]");
-            res.status = e;
+            log.warn(e);
+            res.status = stoi(e);
+            res.set_content(e, "text/plain");
         } catch (const exception& e)
         {
             string str(e.what());
             log.warn("create flight failed: " + str + " [code 500]");
             res.status = 500;
+            res.set_content(e.what(), "text/plain");
         } catch (...)
         {
             log.error("unknown error occured");
             res.status = 500;
+            res.set_content("unknown error occured", "text/plain");
         }
     });
 }
