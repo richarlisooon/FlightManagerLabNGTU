@@ -16,7 +16,7 @@ void PlaneController::configure(Server* server)
             string service_token = req.get_header_value("Service-Token");
             if (service_token != SERVICE_TOKEN_VALUE) {
                 log.warn("get planes failed: forbidden access [code 403]");
-                throw 403;
+                throw string("403 Forbidden access");
             }
             list<PlaneModelResponse> planes = serv.getAllPlanes(header);
             json planes_json = json::array();
@@ -33,23 +33,28 @@ void PlaneController::configure(Server* server)
                 plane_json["x"] = plane.getX();
                 plane_json["y"] = plane.getY();
                 planes_json.push_back(plane_json);
+                log.info("brokenPercentage: " + to_string(plane.getBrokenPercentage()));
             }
             res.status = 200;
             res.set_content(planes_json.dump(), "application/json");
+            log.info("brokenPercentage");
             log.info("get plane successful: (" + to_string(planes_json.size()) + " entities) [code 200]");
-        } catch (int& e)
+        } catch (string& e)
         {
-            log.warn("update plane failed: [code " + to_string(e) + "]");
-            res.status = e;
+            log.warn(e);
+            res.status = stoi(e);
+            res.set_content(e, "text/plain");
         } catch (const exception& e)
         {
             string str(e.what());
             log.warn("get planes failed: " + str + " [code 500]");
             res.status = 500;
+            res.set_content(e.what(), "text/plain");
         } catch (...)
         {
             log.error("unknown error occured");
             res.status = 500;
+            res.set_content("unknown error occured", "text/plain");
         }
     });
 
@@ -61,7 +66,7 @@ void PlaneController::configure(Server* server)
             string service_token = req.get_header_value("Service-Token");
             if (service_token != SERVICE_TOKEN_VALUE) {
                 log.warn("get planes failed: forbidden access [code 403]");
-                throw 403;
+                throw string("403 Forbidden access");
             }
             json request;
             try
@@ -70,7 +75,7 @@ void PlaneController::configure(Server* server)
             } catch (...)
             {
                 log.warn("create plane failed: inalid data [code 400]");
-                throw 400;
+                throw string("400 Bad request");
             }
             string name, pilot;
             int builtYear, speed, minAirportSize;
@@ -83,8 +88,8 @@ void PlaneController::configure(Server* server)
                 minAirportSize = request["minAirportSize"];
             } catch (...)
             {
-                log.warn("create plane failed: inalid data [code 400]");
-                throw 400;
+                log.warn("create plane failed: invalid data [code 400]");
+                throw string("400 Invalid data");
             }
             PlaneModel plane(0, name, pilot, builtYear, 0, speed, minAirportSize);
             PlaneModel created = serv.createPlane(plane, header);
@@ -99,19 +104,22 @@ void PlaneController::configure(Server* server)
             res.status = 200;
             res.set_content(plane_json.dump(), "application/json");
             log.info("create plane successful: id=" + to_string(plane_json["id"]) + " [code 200]");
-        } catch (int& e)
+        } catch (string& e)
         {
-            log.warn("update plane failed: [code " + to_string(e) + "]");
-            res.status = e;
+            log.warn(e);
+            res.status = stoi(e);
+            res.set_content(e, "text/plain");
         } catch (const exception& e)
         {
             string str(e.what());
             log.warn("create plane failed: " + str + " [code 500]");
             res.status = 500;
+            res.set_content(e.what(), "text/plain");
         } catch (...)
         {
             log.error("unknown error occured");
             res.status = 500;
+            res.set_content("unknown error occured", "text/plain");
         }
     });
     server->Post(PLANE_UPDATE_MAPPING, [&](const Request& req, Response& res)
@@ -122,7 +130,7 @@ void PlaneController::configure(Server* server)
             string service_token = req.get_header_value("Service-Token");
             if (service_token != SERVICE_TOKEN_VALUE) {
                 log.warn("update plane failed: forbidden access [code 403]");
-                throw 403;
+                throw string("403 Forbidden access");
             }
             string fields;
             try
@@ -131,7 +139,7 @@ void PlaneController::configure(Server* server)
             } catch (...)
             {
                 log.warn("update plane failed: invalid parameter 'update' [code 400]");
-                throw 400;
+                throw string("400 invalid parameter update");
             }
             stringstream ss(fields);
             string item;
@@ -150,19 +158,19 @@ void PlaneController::configure(Server* server)
             } catch (...)
             {
                 log.warn("update plane failed: invalid data [code 400]");
-                throw 400;
+                throw string("400 Bad request");
             }
             for (auto update : updates)
             {
                 if (request[update].is_null())
                 {
                     log.warn("update plane failed: fields to update not provided [code 400]");
-                    throw 400;
+                    throw string("400 fields to update not provided");
                 }
                 if (request["id"].is_null())
                 {
                     log.warn("update plane failed: id not provided [code 400]");
-                    throw 400;
+                    throw string("400 Id not provided");
                 }
 
             }
@@ -177,8 +185,8 @@ void PlaneController::configure(Server* server)
                 if (!request["minAirportSize"].is_null()) minAirportSize = request["minAirportSize"]; else minAirportSize = 0;
             } catch (...)
             {
-                log.warn("update plane failed: fields to update not provided [code 400]");
-                throw 400;
+                log.warn("update plane failed: Invalid data [code 400]");
+                throw string("400 Invalid data");
             }
             PlaneModel plane(request["id"], name, pilot, builtYear, 0, speed, minAirportSize);
             PlaneModel updated = serv.updatePlane(plane, updates, header);
@@ -194,19 +202,22 @@ void PlaneController::configure(Server* server)
             res.status = 200;
             res.set_content(plane_json.dump(), "application/json");
             log.info("update plane successful: id=" + to_string(updated.getId()) + " [code 200]");
-        } catch (int& e)
+        } catch (string& e)
         {
-            log.warn("update plane failed: [code " + to_string(e) + "]");
-            res.status = e;
+            log.warn(e);
+            res.status = stoi(e);
+            res.set_content(e, "text/plain");
         } catch (const exception& e)
         {
             string str(e.what());
             log.warn("update plane failed: " + str + " [code 500]");
             res.status = 500;
+            res.set_content(e.what(), "text/plain");
         } catch (...)
         {
             log.error("unknown error occured");
             res.status = 500;
+            res.set_content("unknown error occured", "text/plain");
         }
     });
     server->Delete(PLANE_DELETE_MAPPING, [&](const Request& req, Response& res)
@@ -217,7 +228,7 @@ void PlaneController::configure(Server* server)
             string service_token = req.get_header_value("Service-Token");
             if (service_token != SERVICE_TOKEN_VALUE) {
                 log.warn("delete plane failed: forbidden access [code 403]");
-                throw 403;
+                throw string("403 Forbidden access");
             }
             long int id;
             try
@@ -226,25 +237,28 @@ void PlaneController::configure(Server* server)
             } catch (...)
             {
                 log.warn("delete plane failed: invalid id [code 400]");
-                throw 400;
+                throw string("400 Invalid parameter id");
             }
 
             serv.deletePlane(id, header);
             res.status = 200;
             log.info("delete plane successful: id=" + to_string(id) + " [code 200]");
-        } catch (int& e)
+        } catch (string& e)
         {
-            log.warn("update plane failed: [code " + to_string(e) + "]");
-            res.status = e;
+            log.warn(e);
+            res.status = stoi(e);
+            res.set_content(e, "text/plain");
         } catch (const exception& e)
         {
             string str(e.what());
             log.warn("delete plane failed: " + str + " [code 500]");
             res.status = 500;
+            res.set_content(e.what(), "text/plain");
         } catch (...)
         {
             log.error("unknown error occured");
             res.status = 500;
+            res.set_content("unknown error occured", "text/plain");
         }
     });
 }
