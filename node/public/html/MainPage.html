@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GaySky Airlines - Main page</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✈</text></svg>">
+    <link rel="stylesheet" href="../css/MainPage.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+<div class="dashboard-container">
+    <header class="dashboard-header">
+        <div class="logo">
+            <i class="fas fa-plane"></i>
+            <h1>GaySky Airlines</h1>
+        </div>
+        <div class="time-control">
+            <span id="currentTime">Loading time...</span>
+            <button class="time-skip-btn" onclick="openTimeModal()">
+                <i class="fas fa-forward"></i> Skip Time
+            </button>
+        </div>
+        <div id="timeModal" class="modal">
+            <div class="modal-content">
+                <h2>Skip Time</h2>
+                <div class="form-group">
+                    <label for="skipHours">Hours to skip:</label>
+                    <input type="number" id="skipHours" min="1" value="1">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="action-btn close-btn" onclick="closeTimeModal()">Cancel</button>
+                    <button type="button" class="action-btn submit-btn" onclick="skipTime()">Skip</button>
+                </div>
+            </div>
+        </div>
+        <div class="user-info">
+            <span class="username">Dispatcher</span>
+            <button class="btn-logout" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i>
+            </button>
+        </div>
+    </header>
+
+    <main class="dashboard-main">
+        <h2>Interaction Panel</h2>
+
+        <div class="control-panel">
+            <div class="control-card" onclick="navigateTo('planes')">
+                <div class="control-icon">
+                    <i class="fas fa-plane"></i>
+                </div>
+                <h3>Plane management</h3>
+                <p>Creating, deleting, updating and getting planes</p>
+            </div>
+
+            <div class="control-card" onclick="navigateTo('airports')">
+                <div class="control-icon">
+                    <i class="fas fa-map-marked-alt"></i>
+                </div>
+                <h3>Airport management</h3>
+                <p>Creating, deleting, updating and getting airports</p>
+            </div>
+
+            <div class="control-card" onclick="navigateTo('flights')">
+                <div class="control-icon">
+                    <i class="fas fa-route"></i>
+                </div>
+                <h3>Flight management</h3>
+                <p>Creating and getting flights</p>
+            </div>
+
+            <div class="control-card" onclick="navigateTo('dispatchers')">
+                <div class="control-icon">
+                    <i class="fas fa-user-tie"></i>
+                </div>
+                <h3>Dispatchers management</h3>
+                <p>Setting up dispatcher accounts</p>
+            </div>
+        </div>
+    </main>
+
+
+    <footer class="dashboard-footer">
+        <p>© 2023 GaySky Airlines. All rights reserved.</p>
+        <p>Version 1.0.0</p>
+    </footer>
+</div>
+
+<script src="../js/MainPage.js"></script>
+</body>
+</html>
