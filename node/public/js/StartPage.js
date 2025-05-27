@@ -1,14 +1,19 @@
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('loginFormElement').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        await handleLogin();
+    });
 
-function showMainContent() {
-    document.getElementById('mainContent').style.display = 'flex';
-    document.getElementById('loginForm').style.display = 'none';
-    document.getElementById('registerForm').style.display = 'none';
-}
+    document.getElementById('registerFormElement').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        await handleRegister();
+    });
+});
 
 function showLoginForm() {
     document.getElementById('mainContent').style.display = 'none';
-    document.getElementById('loginForm').style.display = 'flex';
     document.getElementById('registerForm').style.display = 'none';
+    document.getElementById('loginForm').style.display = 'flex';
 }
 
 function showRegisterForm() {
@@ -17,9 +22,13 @@ function showRegisterForm() {
     document.getElementById('registerForm').style.display = 'flex';
 }
 
-document.getElementById('loginFormElement').addEventListener('submit', async function(e) {
-    e.preventDefault();
+function showMainContent() {
+    document.getElementById('loginForm').style.display = 'none';
+    document.getElementById('registerForm').style.display = 'none';
+    document.getElementById('mainContent').style.display = 'flex';
+}
 
+async function handleLogin() {
     const email = document.getElementById('loginEmail').value;
     const password = document.getElementById('loginPassword').value;
 
@@ -29,29 +38,26 @@ document.getElementById('loginFormElement').addEventListener('submit', async fun
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
-                email: email,
-                password: password
-            })
+            body: JSON.stringify({ email, password })
         });
 
-        if (response.ok) {
-            const data = await response.json();
-            localStorage.setItem('authToken', data.token);
-            localStorage.setItem('userId', data.id);
-            window.location.href = '../html/MainPage.html';
-        } else {
-            const error = await response.json();
-            alert(`Ошибка: ${error.message}`);
+        if (!response.ok) {
+            const errorMessage = await response.text();
+            throw new Error(errorMessage);
         }
-    } catch (err) {
-        alert('Ошибка сети: ' + err.message);
+
+        const data = await response.json();
+        localStorage.setItem('authToken', data.token);
+        localStorage.setItem('userId', data.id);
+        window.location.href = '/html/MainPage.html';
+
+    } catch (error) {
+        console.error('Login error:', error);
+        alert('Login failed: ' + error.message);
     }
-});
+}
 
-document.getElementById('registerFormElement').addEventListener('submit', async function(e) {
-    e.preventDefault();
-
+async function handleRegister() {
     const email = document.getElementById('regEmail').value;
     const firstName = document.getElementById('regFirstName').value;
     const lastName = document.getElementById('regLastName').value;
@@ -59,7 +65,7 @@ document.getElementById('registerFormElement').addEventListener('submit', async 
     const confirmPassword = document.getElementById('regConfirmPassword').value;
 
     if (password !== confirmPassword) {
-        alert('Пароли не совпадают!');
+        alert('Passwords do not match!');
         return;
     }
 
@@ -70,26 +76,26 @@ document.getElementById('registerFormElement').addEventListener('submit', async 
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                email: email,
-                firstName: firstName,
-                lastName: lastName,
-                password: password,
-                roles: ["DISPATCHER"]
+                email,
+                firstName,
+                lastName,
+                password
             })
         });
 
-        if (response.ok) {
-            const data = await response.json();
-            localStorage.setItem('authToken', data.token);
-            window.location.href = '../html/MainPage.html';
-        } else {
-            const error = await response.json();
-            alert(`Ошибка: ${error.message}`);
+        if (!response.ok) {
+            const errorMessage = await response.text();
+            throw new Error(errorMessage);
         }
-    } catch (err) {
-        alert('Ошибка сети: ' + err.message);
+
+        alert('Registration successful! Please login with your credentials.');
+        showLoginForm();
+
+    } catch (error) {
+        console.error('Registration error:', error);
+        alert('Registration failed: ' + error.message);
     }
-});
+}
 
 document.querySelector('.plane-animation i').addEventListener('mouseover', function() {
     this.style.animationPlayState = 'paused';

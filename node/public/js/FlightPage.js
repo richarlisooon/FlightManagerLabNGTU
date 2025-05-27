@@ -8,11 +8,10 @@ document.addEventListener('DOMContentLoaded', function() {
         e.preventDefault();
         if (currentAction === 'add') {
             createFlight();
-        } else {
-            updateFlight();
         }
     });
 });
+
 
 async function loadFlights() {
     try {
@@ -22,7 +21,11 @@ async function loadFlights() {
                 'Authorization': localStorage.getItem('authToken')
             }
         });
-        if (!response.ok) throw new Error('Network response was not ok');
+
+        if (!response.ok) {
+            const errorMessage = await response.text();
+            throw new Error(errorMessage);
+        }
 
         flights = await response.json();
         renderFlights();
@@ -65,34 +68,20 @@ function openAddModal() {
     document.getElementById('flightModal').style.display = 'block';
 }
 
-function openEditModal(id) {
-    currentAction = 'edit';
-    const flight = flights.find(f => f.id === id);
-
-    if (flight) {
-        document.getElementById('modalTitle').textContent = 'Edit Flight';
-        document.getElementById('flightId').value = flight.id;
-        document.getElementById('dispatcherId').value = flight.dispatcherId;
-        document.getElementById('airportId').value = flight.airportId;
-        document.getElementById('planeId').value = flight.planeId;
-        document.getElementById('flightModal').style.display = 'block';
-    }
-}
-
 function closeModal() {
     document.getElementById('flightModal').style.display = 'none';
 }
 
 async function createFlight() {
-    const flight = {
-        dispatcherId: parseInt(document.getElementById('dispatcherId').value),
-        airportId: parseInt(document.getElementById('airportId').value),
-        planeId: parseInt(document.getElementById('planeId').value),
-        timestampStart: 0,
-        timestampEnd: 0,
-    };
-
     try {
+        const flight = {
+            dispatcherId: parseInt(document.getElementById('dispatcherId').value),
+            airportId: parseInt(document.getElementById('airportId').value),
+            planeId: parseInt(document.getElementById('planeId').value),
+            timestampStart: 0,
+            timestampEnd: 0,
+        };
+
         const response = await fetch('http://localhost:8080/api/flights/create', {
             method: 'POST',
             headers: {
@@ -102,10 +91,13 @@ async function createFlight() {
             body: JSON.stringify(flight)
         });
 
-        if (!response.ok) throw new Error('Network response was not ok');
+        if (!response.ok) {
+            const errorMessage = await response.text();
+            throw new Error(errorMessage);
+        }
 
         closeModal();
-        loadFlights();
+        await loadFlights();
         alert('Flight created successfully!');
     } catch (error) {
         console.error('Error creating flight:', error);

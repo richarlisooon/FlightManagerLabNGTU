@@ -52,12 +52,45 @@ async function loadCurrentTime() {
             }
         });
 
-        if (!response.ok) throw new Error('Failed to load time');
+        if (!response.ok) {
+            const errorMessage = await response.text();
+            throw new Error(errorMessage);
+        }
 
         const currentTime = parseInt(await response.text());
         document.getElementById('currentTime').textContent = formatUnixTime(currentTime);
     } catch (error) {
         console.error('Error loading time:', error);
+        alert('Failed to load time: ' + error.message);
+    }
+}
+
+async function skipTime() {
+    const hours = document.getElementById('skipHours').value;
+    if (!hours || hours < 1) {
+        alert('Please enter valid number of hours');
+        return;
+    }
+
+    try {
+        const response = await fetch(`http://localhost:8080/api/time/skip?skip=${hours * 3600}`, {
+            method: 'POST',
+            headers: {
+                'Authorization': localStorage.getItem('authToken')
+            }
+        });
+
+        if (!response.ok) {
+            const errorMessage = await response.text();
+            throw new Error(errorMessage);
+        }
+
+        closeTimeModal();
+        loadCurrentTime();
+        alert(`Time skipped by ${hours} hours`);
+    } catch (error) {
+        console.error('Error skipping time:', error);
+        alert('Failed to skip time: ' + error.message);
     }
 }
 
@@ -81,33 +114,6 @@ function openTimeModal() {
 function closeTimeModal() {
     document.getElementById('timeModal').style.display = 'none';
 }
-
-async function skipTime() {
-    const hours = document.getElementById('skipHours').value;
-    if (!hours || hours < 1) {
-        alert('Please enter valid number of hours');
-        return;
-    }
-
-    try {
-        const response = await fetch(`http://localhost:8080/api/time/skip?skip=${hours * 3600}`, {
-            method: 'POST',
-            headers: {
-                'Authorization': localStorage.getItem('authToken')
-            }
-        });
-
-        if (!response.ok) throw new Error('Failed to skip time');
-
-        closeTimeModal();
-        loadCurrentTime();
-        alert(`Time skipped by ${hours} hours`);
-    } catch (error) {
-        console.error('Error skipping time:', error);
-        alert('Error: ' + error.message);
-    }
-}
-
 
 window.addEventListener('beforeunload', function() {
     clearInterval(timeUpdateInterval);

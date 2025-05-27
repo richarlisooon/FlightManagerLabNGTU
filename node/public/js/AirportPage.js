@@ -22,7 +22,11 @@ async function loadAirports() {
                 'Authorization': localStorage.getItem('authToken')
             }
         });
-        if (!response.ok) throw new Error('Network response was not ok');
+
+        if (!response.ok) {
+            const errorMessage = await response.text();
+            throw new Error(errorMessage);
+        }
 
         airports = await response.json();
         renderAirports();
@@ -81,6 +85,7 @@ function openEditModal(id) {
         document.getElementById('airportModal').style.display = 'block';
     }
 }
+
 function closeModal() {
     document.getElementById('airportModal').style.display = 'none';
 }
@@ -103,7 +108,10 @@ async function createAirport() {
             body: JSON.stringify(airport)
         });
 
-        if (!response.ok) throw new Error('Network response was not ok');
+        if (!response.ok) {
+            const errorMessage = await response.text();
+            throw new Error(errorMessage);
+        }
 
         closeModal();
         loadAirports();
@@ -125,7 +133,6 @@ async function updateAirport() {
     };
     const updateParams = "name,size,x,y";
 
-    console.log(updateParams)
     try {
         const response = await fetch(`http://localhost:8080/api/airport/update?update=${updateParams}`, {
             method: 'POST',
@@ -137,8 +144,8 @@ async function updateAirport() {
         });
 
         if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || 'Network response was not ok');
+            const errorMessage = await response.text();
+            throw new Error(errorMessage);
         }
 
         closeModal();
@@ -149,6 +156,7 @@ async function updateAirport() {
         alert('Failed to update airport: ' + error.message);
     }
 }
+
 async function deleteAirport(id) {
     if (!confirm('Are you sure you want to delete this airport?')) return;
 
@@ -160,7 +168,10 @@ async function deleteAirport(id) {
             }
         });
 
-        if (!response.ok) throw new Error('Network response was not ok');
+        if (!response.ok) {
+            const errorMessage = await response.text();
+            throw new Error(errorMessage);
+        }
 
         loadAirports();
         alert('Airport deleted successfully!');
@@ -169,6 +180,8 @@ async function deleteAirport(id) {
         alert('Failed to delete airport: ' + error.message);
     }
 }
+
 function logout() {
+    localStorage.removeItem('authToken');
     window.location.href = '/html/StartPage.html';
 }

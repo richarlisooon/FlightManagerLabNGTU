@@ -28,7 +28,7 @@
                 <i class="fas fa-arrow-left"></i> Back
             </button>
             <span class="username">Dispatcher</span>
-            <button class="btn-logout" onclick="logout()">
+            <button class="btn-logout" id="logoutBtn" onclick="logout()">
                 <i class="fas fa-sign-out-alt"></i>
             </button>
         </div>
@@ -101,7 +101,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="action-btn close-btn" onclick="closeModal()">Cancel</button>
-                    <button type="submit" class="action-btn submit-btn">Update</button>
+                    <button type="submit" class="action-btn submit-btn" onclick="updateDispatcher()">Update</button>
                 </div>
             </form>
         </div>
