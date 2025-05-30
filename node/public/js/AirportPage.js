@@ -115,7 +115,6 @@ async function createAirport() {
 
         closeModal();
         loadAirports();
-        alert('Airport created successfully!');
     } catch (error) {
         console.error('Error creating airport:', error);
         alert('Failed to create airport: ' + error.message);
@@ -150,7 +149,6 @@ async function updateAirport() {
 
         closeModal();
         await loadAirports();
-        alert('Airport updated successfully!');
     } catch (error) {
         console.error('Error updating airport:', error);
         alert('Failed to update airport: ' + error.message);
@@ -174,7 +172,6 @@ async function deleteAirport(id) {
         }
 
         loadAirports();
-        alert('Airport deleted successfully!');
     } catch (error) {
         console.error('Error deleting airport:', error);
         alert('Failed to delete airport: ' + error.message);
