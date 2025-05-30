@@ -98,7 +98,6 @@ async function createFlight() {
 
         closeModal();
         await loadFlights();
-        alert('Flight created successfully!');
     } catch (error) {
         console.error('Error creating flight:', error);
         alert('Failed to create flight: ' + error.message);
