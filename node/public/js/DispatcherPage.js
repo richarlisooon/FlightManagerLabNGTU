@@ -115,7 +115,6 @@ async function updateDispatcher() {
         if (dispatchers.length > 0 && dispatchers[0].roles && dispatchers[0].roles.includes("ADMIN")) {
             await loadAllDispatchers();
         }
-        alert('Dispatcher updated successfully!');
     } catch (error) {
         console.error('Error updating dispatcher:', error);
         alert('Failed to update dispatcher: ' + error.message);
