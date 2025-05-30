@@ -68,7 +68,6 @@ async function createPlane() {
 
         closeModal();
         await loadPlanes();
-        alert('Plane created successfully!');
     } catch (error) {
         console.error('Error creating plane:', error);
         alert('Failed to create plane: ' + error.message);
@@ -104,7 +103,6 @@ async function updatePlane() {
 
         closeModal();
         await loadPlanes();
-        alert('Plane updated successfully!');
     } catch (error) {
         console.error('Error updating plane:', error);
         alert('Failed to update plane: ' + error.message);
@@ -128,7 +126,6 @@ async function deletePlane(id) {
         }
 
         await loadPlanes();
-        alert('Plane deleted successfully!');
     } catch (error) {
         console.error('Error deleting plane:', error);
         alert('Failed to delete plane: ' + error.message);
