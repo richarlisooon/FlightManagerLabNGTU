@@ -87,7 +87,6 @@ async function skipTime() {
 
         closeTimeModal();
         loadCurrentTime();
-        alert(`Time skipped by ${hours} hours`);
     } catch (error) {
         console.error('Error skipping time:', error);
         alert('Failed to skip time: ' + error.message);
