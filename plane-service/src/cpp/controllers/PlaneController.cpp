@@ -33,11 +33,9 @@ void PlaneController::configure(Server* server)
                 plane_json["x"] = plane.getX();
                 plane_json["y"] = plane.getY();
                 planes_json.push_back(plane_json);
-                log.info("brokenPercentage: " + to_string(plane.getBrokenPercentage()));
             }
             res.status = 200;
             res.set_content(planes_json.dump(), "application/json");
-            log.info("brokenPercentage");
             log.info("get plane successful: (" + to_string(planes_json.size()) + " entities) [code 200]");
         } catch (string& e)
         {

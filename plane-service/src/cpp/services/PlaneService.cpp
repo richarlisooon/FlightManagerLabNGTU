@@ -101,6 +101,8 @@ PlaneModel PlaneService::createPlane(PlaneModel plane, string token)
     list<AirportModel> airports = air.getAirports();
     if (airports.empty())
         throw string("409 No airports to create plane");
+    if (airports.front().getSize() < plane.getMinAirportSize())
+        throw string("409 Airport size is too small");
     PlaneModel res = repo.createPlane(plane);
     return res;
 }
@@ -124,7 +126,7 @@ PlaneModel PlaneService::updatePlane(PlaneModel plane, set<string> update, strin
     set<string> permissions;
     permissions.insert("plane-update");
     if (!ident.authorize(permissions, token))
-         throw string("401 User is unauthorized");
+        throw string("401 User is unauthorized");
     long int planeId = plane.getId();
     list<FlightModel> flights = flight.getFlights(nullptr, nullptr, nullptr, nullptr, &planeId);
     if (!flights.empty()){
@@ -134,7 +136,20 @@ PlaneModel PlaneService::updatePlane(PlaneModel plane, set<string> update, strin
     }
     if (update.count("brokenPercentage") > 0)
         throw string("400 User can't change broken percentage");
+    if (update.count("minAirportSize") > 0)
+    {
+        list<AirportModel> airports;
+        if (!flights.empty())
+        {
+            long int airId = flights.back().getAirportId();
+            airports = air.getAirports(&airId);
+        } else
+        {
+            airports = air.getAirports();
+        }
+        if (plane.getMinAirportSize() > airports.front().getSize())
+            throw string("409 Airport size is too small");
+    }
     PlaneModel res = repo.updatePlane(plane, update);
     return res;
 }
-
